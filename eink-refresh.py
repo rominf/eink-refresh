@@ -21,8 +21,12 @@ import sys
 
 
 class MainWindow(QWidget):
-    def __init__(self, processEvents, refresh_delay):
-        super(MainWindow, self).__init__()
+    def __init__(self,
+                 parent=None,
+                 processEvents=(lambda x: None),
+                 refresh_delay=0
+    ):
+        super(MainWindow, self).__init__(parent, Qt.Tool)
         self.refresh_delay = refresh_delay
         self.processEvents = processEvents
         self.ui = mainwindow_ui.Ui_Form()
