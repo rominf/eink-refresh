@@ -21,25 +21,21 @@ import sys
 
 
 class MainWindow(QWidget):
-    def __init__(self,
-                 parent=None,
-                 processEvents=(lambda x: None),
-                 refresh_delay=0
-    ):
+    def __init__(self, parent=None, app=None, refresh_delay=600.0):
         super(MainWindow, self).__init__(parent, Qt.Tool)
         self.refresh_delay = refresh_delay
-        self.processEvents = processEvents
+        self.app = app
         self.ui = mainwindow_ui.Ui_Form()
         self.ui.setupUi(self)
 
     def sleep(self, ms):
-        self.processEvents()
+        self.app.processEvents()
         sleep(ms/1000.0)
 
     def refresh_and_close(self):
         self.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.sleep(self.refresh_delay)
-        self.close()
+        self.app.quit()
 
     def showEvent(self, QShowEvent):
         QTimer.singleShot(self.refresh_delay, self.refresh_and_close)
@@ -48,10 +44,7 @@ class MainWindow(QWidget):
 def main(args):
     app = QApplication(sys.argv)
     refresh_delay = float(args['--refresh-delay'])
-    main_window = MainWindow(
-        processEvents=app.processEvents,
-        refresh_delay=refresh_delay,
-    )
+    main_window = MainWindow(app=app, refresh_delay=refresh_delay)
     main_window.showFullScreen()
     return app.exec_()
 
