@@ -1,16 +1,19 @@
 #!/usr/bin/env fish
 
+
 if [ (count $argv) -eq 0 ]
   set argv on off
 end
 
+set current_dir (dirname (status --current-filename))
+
 switch $argv[1]
   case refresh
-    python3 (dirname (status --current-filename))/eink-refresh.py
+    python3 $current_dir/eink-refresh.py
   case off
-    ssh router /usr/sbin/wl radio off &
+    wifi off
   case on
-    ssh router /usr/sbin/wl radio on &
-    ssh router /usr/sbin/wl radio off &
-    fish (dirname (status --current-filename))/x11vnc.fish $argv[1] >/dev/null ^/dev/null &
+    wifi off
+    wifi on
+    fish $current_dir/x11vnc.fish $argv[1] >/dev/null ^/dev/null &
 end
